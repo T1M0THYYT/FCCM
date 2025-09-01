@@ -70,8 +70,7 @@
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-    <div id="devtools-warning">⚠ Developer tools are disabled!</div>
-
+<div id="devtools-warning">⚠ Developer tools are disabled!</div>
     <div id="app" class="bg-white rounded-2xl shadow-2xl p-6 md:p-10 w-full max-w-4xl space-y-8">
         <h1 class="text-3xl md:text-4xl font-extrabold text-center text-gray-800 mb-6">Command Manager</h1>
 
@@ -279,6 +278,7 @@
         });
 
         renderData();
+        
         const warning = document.getElementById("devtools-warning");
 
         function showWarning() {
