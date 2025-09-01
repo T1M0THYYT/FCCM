@@ -14,7 +14,8 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #ca3636;
+            background: #bd00004f;
+            backdrop-filter: blur(5px);
             color: #fff;
             padding: 10px 20px;
             border-radius: 8px;
@@ -66,14 +67,34 @@
         .icon-button:hover {
             transform: scale(1.1);
         }
+
+        .creator {
+            cursor: pointer;
+            text-align: center;
+            transition: color 0.2s;
+            font-weight: bold;
+        }
+
+        .creator:hover {
+            color: #0051ff;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-<div id="devtools-warning">⚠ Developer tools are disabled!</div>
+    <div id="devtools-warning">⚠ Developer tools are disabled!</div>
     <div id="app" class="bg-white rounded-2xl shadow-2xl p-6 md:p-10 w-full max-w-4xl space-y-8">
         <h1 class="text-3xl md:text-4xl font-extrabold text-center text-gray-800 mb-6">Command Manager</h1>
-
+        <div class="bg-blue-50 p-6 rounded-xl shadow-inner">
+            <h2 class="creator" onclick="window.open('https://youtube.com/T1M0THYYt', '_blank')">Created by @T1M0THYYt
+            </h2>
+            <h2 class="creator"
+                onclick="window.open('https://www.curseforge.com/minecraft-bedrock/texture-packs/fast-commands', '_blank')">
+                Download Fast Commands v2 Texture Pack</h2>
+            <h2 class="text-center text-gray-600 mb-3">Create and manage your custom command categories and commands for
+                Fast Commands v2.</h2>
+        </div>
         <!-- Add Category -->
         <div class="bg-blue-50 p-6 rounded-xl shadow-inner">
             <h2 class="text-2xl font-bold text-blue-800 mb-4">Add New Category</h2>
@@ -81,6 +102,10 @@
                 <div>
                     <label for="newCategoryName" class="block text-sm font-medium text-gray-700">Category Name</label>
                     <input type="text" id="newCategoryName"
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                    <label for="newCategoryDescription" class="block text-sm font-medium text-gray-700">Category
+                        Description</label>
+                    <input type="text" id="newCategoryDescription"
                         class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
                 </div>
                 <button type="submit"
@@ -166,15 +191,6 @@
                         "control_name": "fccm_generated_commands",
                         "operation": "insert_front",
                         "value": [
-                            {
-                                "c1@chat.category": {
-                                    "$category": "This is a template category",
-                                    "$is_category_expanded": false,
-                                    "$content": [
-                                        { "1@chat.command": { "$command": "Command here" } }
-                                    ]
-                                }
-                            }
                         ]
                     }
                 ]
@@ -239,8 +255,9 @@
         addCategoryForm.addEventListener('submit', e => {
             e.preventDefault();
             const name = document.getElementById('newCategoryName').value;
+            const desc = document.getElementById('newCategoryDescription').value;
             const newId = `cat-${Date.now()}@chat.category`;
-            getCategories().push({ [newId]: { "$category": name, "$is_category_expanded": true, "$is_custom_category": true, "$content": [] } })
+            getCategories().push({ [newId]: { "$category": name, "$custom_category_description": desc, "$is_category_expanded": true, "$is_custom_category": true, "$content": [] } })
             renderData(); addCategoryForm.reset();
         });
         addCommandForm.addEventListener('submit', e => {
@@ -264,7 +281,7 @@
         document.getElementById('exportForm').addEventListener('submit', async e => {
             e.preventDefault();
             const name = document.getElementById('packName').value + " §7§k|§r§f §bFast Commands Extension";
-            const description = "§7Generated with Fast Commands Command Manager §l(FCCM)§r§f | §bFCCM Created by @T1M0THYYt\n" + document.getElementById('packDescription').value;
+            const description = "§7Generated with Fast Commands Command Manager §l(FCCM)§r§f | §bFCCM Created by @T1M0THYYt\n§o§7" + document.getElementById('packDescription').value;
             const manifest = { "format_version": 2, "header": { "name": name, "description": description, "uuid": generateUUID(), "version": [1, 0, 0], "min_engine_version": [1, 21, 70] }, "modules": [{ "type": "resources", "uuid": generateUUID(), "version": [1, 0, 0] }] };
             const zip = new JSZip();
             zip.file("manifest.json", JSON.stringify(manifest, null, 2));
@@ -278,7 +295,7 @@
         });
 
         renderData();
-        
+
         const warning = document.getElementById("devtools-warning");
 
         function showWarning() {
