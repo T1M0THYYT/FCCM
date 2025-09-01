@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Commands | Commands Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .category-header {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .category-header:hover {
+            background-color: #e5e7eb;
+        }
+
+        .command-item {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-button {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .icon-button:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="app" class="bg-white rounded-2xl shadow-2xl p-6 md:p-10 w-full max-w-4xl space-y-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-center text-gray-800 mb-6">Command Manager</h1>
+
+        <!-- Add Category -->
+        <div class="bg-blue-50 p-6 rounded-xl shadow-inner">
+            <h2 class="text-2xl font-bold text-blue-800 mb-4">Add New Category</h2>
+            <form id="addCategoryForm" class="space-y-4">
+                <div>
+                    <label for="newCategoryName" class="block text-sm font-medium text-gray-700">Category Name</label>
+                    <input type="text" id="newCategoryName"
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700">Add
+                    Category</button>
+            </form>
+        </div>
+
+        <!-- Search -->
+        <div class="relative">
+            <input type="text" id="searchInput" placeholder="Search categories and commands..."
+                class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg shadow-inner focus:ring-blue-500 focus:border-blue-500">
+            <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+
+        <!-- Data -->
+        <div id="dataContainer" class="space-y-6"></div>
+
+        <!-- Export -->
+        <div class="bg-green-50 p-6 rounded-xl shadow-inner">
+            <h2 class="text-2xl font-bold text-green-800 mb-4">Export Texture Pack</h2>
+            <form id="exportForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Pack Name</label>
+                    <input type="text" id="packName"
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Pack Description</label>
+                    <textarea id="packDescription" rows="2"
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-green-700">Download
+                    Pack</button>
+            </form>
+        </div>
+
+        <!-- Modal -->
+        <div id="addCommandModal"
+            class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur">
+            <div class="relative bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
+                <button onclick="closeModal('addCommandModal')"
+                    class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
+                </button>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Add New Command</h3>
+                <form id="addCommandForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Command</label>
+                        <input type="text" id="commandInput"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Tooltip (Optional)</label>
+                        <input type="text" id="tooltipInput"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Suffix (Optional)</label>
+                        <input type="text" id="ButtonLabelInput"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="isChatInput" class="rounded text-blue-600 focus:ring-blue-500">
+                        <label for="isChatInput" class="text-sm font-medium text-gray-700">Is this a chat message, not a
+                            command?</label>
+                    </div>
+                    <input type="hidden" id="currentCategoryId">
+                    <button type="submit"
+                        class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700">Add
+                        Command</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const initialJsonData = {
+            "cmd_stack": {
+                "modifications": [
+                    {
+                        "control_name": "fccm_generated_commands",
+                        "operation": "insert_front",
+                        "value": [
+                            {
+                                "c1@chat.category": {
+                                    "$category": "This is a template category",
+                                    "$is_category_expanded": false,
+                                    "$content": [
+                                        { "1@chat.command": { "$command": "Command here" } }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        let jsonData = JSON.parse(JSON.stringify(initialJsonData));
+        const dataContainer = document.getElementById('dataContainer');
+        const addCategoryForm = document.getElementById('addCategoryForm');
+        const addCommandForm = document.getElementById('addCommandForm');
+        const addCommandModal = document.getElementById('addCommandModal');
+
+        function getCategories() {
+            return jsonData.cmd_stack.modifications[0].value;
+        }
+
+        function renderData() {
+            dataContainer.innerHTML = '';
+            getCategories().forEach((catObj) => {
+                const catKey = Object.keys(catObj)[0];
+                const catData = catObj[catKey];
+                const catDiv = document.createElement('div');
+                catDiv.className = "bg-gray-50 rounded-xl shadow-md p-4";
+                catDiv.innerHTML = `
+      <div class="flex justify-between items-center category-header" onclick="toggleCategoryCollapse('${catKey}')">
+        <i class="fas fa-folder-open text-gray-600 mr-2"></i>
+        <h3 class="text-xl font-semibold text-gray-800">${catData['$category']}</h3>
+        <div class="flex items-center space-x-3" onclick="event.stopPropagation()">
+          <label class="flex items-center space-x-1 text-sm text-gray-600">
+            <input type="checkbox" onchange="toggleExpanded('${catKey}', this.checked)" ${catData['$is_category_expanded'] ? 'checked' : ''} class="rounded text-blue-600">
+            <span>Expanded by default?</span>
+          </label>
+          <button onclick="showAddCommandModal('${catKey}')" class="text-blue-500"><i class="fas fa-plus-circle"></i></button>
+          <button onclick="deleteCategory('${catKey}')" class="text-red-500"><i class="fas fa-trash-alt"></i></button>
+        </div>
+      </div>
+      <div id="commands-${catKey}" class="space-y-2 mt-4 ${catData['$is_category_expanded'] ? '' : 'hidden'}">
+        ${(catData['$content'] || []).map((cmd, idx) => {
+                    const cmdKey = Object.keys(cmd)[0]; const cmdData = cmd[cmdKey];
+                    return `<div class="command-item bg-white p-3 rounded-lg shadow-sm flex justify-between items-center border">
+            <span class="text-gray-700 font-mono">${cmdData['$command']}</span>
+            <button onclick="deleteCommand('${catKey}',${idx})" class="text-red-400"><i class="fas fa-times"></i></button>
+          </div>`;
+                }).join('')}
+      </div>
+    `;
+                dataContainer.appendChild(catDiv);
+            });
+        }
+        function toggleExpanded(catKey, val) { getCategories().find(c => c[catKey])[catKey]['$is_category_expanded'] = val; }
+        function deleteCategory(catKey) { jsonData.cmd_stack.modifications[0].value = jsonData.cmd_stack.modifications[0].value.filter(c => !c[catKey]); renderData(); }
+        function deleteCommand(catKey, idx) { const cat = getCategories().find(c => c[catKey])[catKey]; cat['$content'].splice(idx, 1); renderData(); }
+        function showAddCommandModal(catKey) { document.getElementById('currentCategoryId').value = catKey; addCommandModal.classList.remove('hidden'); }
+        function closeModal() { addCommandModal.classList.add('hidden'); addCommandForm.reset(); }
+        function toggleCategoryCollapse(catKey) {
+            const el = document.getElementById(`commands-${catKey}`);
+            if (el) {
+                el.classList.toggle('hidden');
+            }
+        }
+
+        addCategoryForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const name = document.getElementById('newCategoryName').value;
+            const newId = `cat-${Date.now()}@chat.category`;
+            getCategories().push({ [newId]: { "$category": name, "$is_category_expanded": true, "$is_custom_category": true, "$content": [] } })
+            renderData(); addCategoryForm.reset();
+        });
+        addCommandForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const catKey = document.getElementById('currentCategoryId').value;
+            const cmd = document.getElementById('commandInput').value;
+            const tip = document.getElementById('tooltipInput').value;
+            const label = document.getElementById('ButtonLabelInput').value;
+            const isChat = document.getElementById('isChatInput').checked;
+            const newId = `cmd-${Date.now()}@chat.command`;
+            const newCmd = { [newId]: { "$command": cmd } };
+            if (isChat) newCmd[newId]['$is_chat_not_command'] = true;
+            if (label) newCmd[newId]['$additional_text_only_label_not_included_as_command_or_chat'] = label;
+            if (tip) { newCmd[newId]['$command_tooltip_enabled'] = true; newCmd[newId]['$command_tooltip'] = tip; }
+            getCategories().find(c => c[catKey])[catKey]['$content'].push(newCmd);
+            renderData(); closeModal();
+        });
+
+        function generateUUID() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); }); }
+
+        document.getElementById('exportForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const name = document.getElementById('packName').value + " §7§k|§r§f §bFast Commands Extension";
+            const description = "§7Generated with Fast Commands Command Manager §l(FCCM)§r§f | §bFCCM Created by @T1M0THYYt\n" + document.getElementById('packDescription').value;
+            const manifest = { "format_version": 2, "header": { "name": name, "description": description, "uuid": generateUUID(), "version": [1, 0, 0], "min_engine_version": [1, 21, 70] }, "modules": [{ "type": "resources", "uuid": generateUUID(), "version": [1, 0, 0] }] };
+            const zip = new JSZip();
+            zip.file("manifest.json", JSON.stringify(manifest, null, 2));
+            zip.file("ui/chat_screen.json", JSON.stringify(jsonData, null, 2));
+            try { const resp = await fetch("fccm-icon.png"); if (resp.ok) { const buf = await resp.arrayBuffer(); zip.file("pack_icon.png", buf); } } catch { }
+            const content = await zip.generateAsync({ type: "base64" });
+            const a = document.createElement("a");
+            a.href = "data:application/zip;base64," + content;
+            a.download = name.replace(/\s+/g, "_") + "_pack.mcpack";
+            a.click();
+        });
+
+        renderData();
+    </script>
+</body>
+
+</html>
