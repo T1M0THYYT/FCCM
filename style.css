@@ -4,6 +4,8 @@ body {
     font-family: 'Inter', sans-serif;
     background-color: #1a1a1a;
     color: #fff;
+    height: 100vh;
+    overflow: hidden;
 }
 
 /* Custom Scrollbar for Sidebar */
@@ -36,4 +38,35 @@ body {
 .category-header {
     background: #313233;
     border-bottom: 1px solid #1a1a1a;
+}
+
+
+.cmdbar {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    height: 100vh;
+    background-color: #18181b;
+    border-right: 1px solid #27272a;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 768px) {
+    .cmdbar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+    }
+
+    .menubtn.open {
+        transform: translateX(100);
+
+    }
+
+    .cmdbar.open {
+        transform: translateX(0);
+    }
 }

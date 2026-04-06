@@ -120,4 +120,17 @@ document.getElementById('exportForm').addEventListener('submit', async e => {
     a.click();
 });
 
+function toggleSidebar() {
+    const sidebar = document.querySelector('.cmdbar');
+    sidebar.classList.toggle('open');
+    
+}
+// document.addEventListener('click', (e) => {
+//     const sidebar = document.querySelector('.cmdbar');
+//     const isClickInside = sidebar.contains(e.target);
+
+//     if (!isClickInside && sidebar.classList.contains('open')) {
+//         sidebar.classList.remove('open');
+//     }
+// });
 renderData();

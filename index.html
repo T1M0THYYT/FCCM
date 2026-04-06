@@ -20,6 +20,10 @@
 
         <main class="flex-1 bg-zinc-100 text-gray-800 overflow-y-auto p-8">
             <div class="max-w-3xl mx-auto space-y-8">
+                <button onclick="toggleSidebar()" id="menubtn"
+                    class="md:hidden mb-4 bg-zinc-800 text-white px-4 py-2 rounded-lg">
+                    ☰ Menu
+                </button>
                 <header class="text-center">
                     <h2 class="text-4xl font-extrabold text-zinc-900">Fast Commands' Command Manager (FCCM)</h2>
                     <p class="text-zinc-500">Modify categories and export your .mcpack</p>
@@ -61,7 +65,7 @@
             </div>
         </main>
 
-        <aside class="w-80 bg-zinc-900 border-r border-zinc-800 flex flex-col shadow-2xl h-full">
+        <aside class="cmdbar">
             <div class="p-4 border-b border-zinc-800 bg-zinc-800">
                 <h1 class="text-center font-bold uppercase tracking-widest text-sm text-gray-300">Quick Commands</h1>
             </div>
