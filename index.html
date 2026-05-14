@@ -68,13 +68,14 @@
         <aside class="cmdbar">
             <div class="p-4 border-b border-zinc-800 bg-zinc-800">
                 <h1 class="text-center font-bold uppercase tracking-widest text-sm text-gray-300">Quick Commands</h1>
+                <h2 class="text-center tracking-widest text-sm text-gray-250">Panel preview</h2>
             </div>
 
             <div id="dataContainer" class="flex-1 overflow-y-auto sidebar-scroll">
             </div>
 
             <div class="p-4 bg-zinc-800 text-[10px] text-zinc-400 border-t border-zinc-700">
-                <p class="font-bold uppercase mb-1">Creator and Credits</p>
+                <p class="font-bold uppercase mb-1">Mabe by</p>
                 <div class="flex items-center space-x-2 bg-zinc-900 p-2 rounded">
                     <div class="w-8 h-8 bg-blue-600 rounded-sm flex items-center justify-center text-white font-bold">T
                     </div>
@@ -93,9 +94,9 @@
         <div class="bg-white text-gray-800 rounded-xl p-8 w-full max-w-md relative">
             <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black"><i
                     class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="text-2xl font-bold mb-4">New Command</h3>
+            <h3 class="text-2xl font-bold mb-4">Add New Item</h3>
             <form id="addCommandForm" class="space-y-4">
-                <input type="text" id="commandInput" placeholder="/command" class="w-full p-2 border rounded-lg"
+                <input type="text" id="commandInput" placeholder="/command or chat" class="w-full p-2 border rounded-lg"
                     required>
                 <input type="text" id="tooltipInput" placeholder="Tooltip (Optional)"
                     class="w-full p-2 border rounded-lg">

@@ -36,7 +36,7 @@ function renderData() {
                                     ${cmdData['$command']}
                                 </button>
                                 <button onclick="deleteCommand('${catKey}',${idx})" class="absolute right-2 opacity-0 group-hover:opacity-100 text-red-500 bg-zinc-800 p-1 rounded transition">
-                                    <i class="fas fa-times text-[10px]"></i>
+                                    <i class="fas fa-trash text-white-500 hover:text-red "></i>
                                 </button>
                             </div>`;
         }).join('')}

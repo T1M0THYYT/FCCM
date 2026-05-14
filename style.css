@@ -8,7 +8,6 @@ body {
     overflow: hidden;
 }
 
-/* Custom Scrollbar for Sidebar */
 .sidebar-scroll::-webkit-scrollbar {
     width: 6px;
 }
